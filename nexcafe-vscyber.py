@@ -52,7 +52,7 @@ def insertPESSXFORMACNTT(cur, idformacntt, referencia, unidgeo, firstName, lastN
 xl = pd.ExcelFile(file)
 
 dfExportar = xl.parse('Exportar')
-dfExportar = dfExportar[dfExportar.Código.notnull()]
+dfExportar = dfExportar[dfExportar.Username.notnull()]
 dfExportar = dfExportar.replace("'","",regex=True)
 
 new = dfExportar.Nome.str.split(" ", n=1, expand=True)
@@ -73,8 +73,10 @@ dfExportar['Créditos Promocionais'] = dfExportar['Créditos Promocionais'].repl
                                                                                   None], [''])
 dfExportar['Cortesia'] = dfExportar['Créditos Promocionais'].apply(timeToInt)
 
+dfExportar['Data Nasc.'] = dfExportar['Data Nasc.'].replace([None], [''])
+
 dfExportar['DataNasc'] = dfExportar['Data Nasc.'].apply(
-    lambda x: None if str(x) == 'NaT' else datetime.strftime(x, '%Y.%m.%d'))
+    lambda x: None if str(x) == '' else datetime.strftime(x, '%Y.%m.%d'))
 
 dfExportar.UF = dfExportar.UF.fillna('UF').str.upper()
 dfExportar.Cidade = dfExportar.Cidade.fillna('Cidade')
@@ -85,7 +87,7 @@ dfExportar.Mãe = dfExportar.Mãe.replace([None], [''])
 dfExportar['Responsavel'] = np.where(
     dfExportar.Pai=='', dfExportar.Pai.str[:50], dfExportar.Mãe.str[:50])
 
-dfExportar.Username = dfExportar.Username.str.strip()
+dfExportar.Username = dfExportar.Username.astype(str).str.strip()
 
 con = fdb.connect(dsn="localhost:{}\\VSCyber.FDB".format(os.getcwd()),
                   user="sysdba",
