@@ -5,6 +5,7 @@ import time
 import os
 import sys
 import shutil
+import zipfile
 from datetime import datetime
 from unicodedata import normalize
 
@@ -191,5 +192,8 @@ for index, row in dfExportar.iterrows():
         cur.execute(sql)
 
 con.commit()
+
+zip = zipfile.ZipFile('VSCyber.zip', 'w')
+zip.write('VSCyber.FDB', compress_type=zipfile.ZIP_DEFLATED)
 
 print('Importação concluída!')
