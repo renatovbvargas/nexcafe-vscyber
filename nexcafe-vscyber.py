@@ -106,6 +106,8 @@ for index, row in dfExportar.iterrows():
 
 cur.execute("insert into cli (idcli, sitppgcli, flags) select idpessoa, 1, 2 from pessoa where idpessoa not in (select idcli from cli)")
 
+cur.execute("update VRFXTABHORA set valor = {}".format(hora))
+
 for UF in dfExportar.UF.unique():
     sql1 = "insert into UNIDGEO values (GEN_ID(UnidGeo_GEN,1),'{}', 1, current_timestamp, NULL, NULL)".format(
         UF)
