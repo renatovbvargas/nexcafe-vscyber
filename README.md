@@ -2,6 +2,7 @@
 Converte BD Nexcafe para o VSCyber
 
 ## Pré-requisitos:
+* Windows (testei no Windows 7 64bits)
 * Python (testei na versão 3.7.4)
 * Firebird instalado na porta padrão (3050)
 
