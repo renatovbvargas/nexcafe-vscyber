@@ -38,7 +38,10 @@ def timeToInt(strTime):
     if fmt == '':
         return 0
 
-    result = time.strptime(strTime, fmt)
+    try:
+        result = time.strptime(strTime, fmt)
+    except ValueError as e:
+        result = time.strptime('0s', '%Ss')
 
     return result.tm_hour + (result.tm_min/60) + ((result.tm_sec/60)/60)
 
@@ -72,9 +75,10 @@ dfExportar['Valor'].fillna(0, inplace=True)
 
 dfExportar['Créditos Promocionais'] = dfExportar['Créditos Promocionais'].replace([
                                                                                   None], [''])
-dfExportar['Cortesia'] = dfExportar['Créditos Promocionais'].apply(timeToInt)
+dfExportar['Cortesia'] = round(dfExportar['Créditos Promocionais'].apply(timeToInt)* hora,2)
 
 dfExportar['Data Nasc.'] = dfExportar['Data Nasc.'].replace([None], [''])
+dfExportar['Data Nasc.'] = dfExportar['Data Nasc.'].replace([0], [''])
 
 dfExportar['DataNasc'] = dfExportar['Data Nasc.'].apply(
     lambda x: None if str(x) == '' else datetime.strftime(x, '%Y.%m.%d'))
