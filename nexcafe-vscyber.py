@@ -18,8 +18,11 @@ file = os.getcwd() + '\\Exportar.xls'
 
 hora = float(sys.argv[1].replace(',', '.'))
 
-
 def timeToInt(strTime):
+
+    if isinstance(strTime, int):
+        return strTime / 60
+
     fmt = ''
     strTime = str(strTime)
 
@@ -53,10 +56,16 @@ def insertPESSXFORMACNTT(cur, idformacntt, referencia, unidgeo, firstName, lastN
         cur.execute(sql)
 
 
-xl = pd.ExcelFile(file)
+dfExportar = pd.read_excel(file, sheet_name=0, header=None)
 
-dfExportar = xl.parse('Exportar')
+dfExportar.columns = ['Nome', 'Username', 'Código', 'Status', 'Tipo', 'Débito', 'Cred.Tempo', 'Cred.Valor', 'Créditos Promocionais', 'Data Nasc.',
+                      'Tempo Usado', 'RG', 'Endereço', 'Bairro', 'Cidade', 'UF', 'CEP', 'Sexo', 'E-mail', 'Telefone', 'Escola', 'NickName', 'Celular', 
+                      'Incluído Em', 'Limite Débito', 'Incluído Por', 'Alterado Em', 'Alterado Por', 'Tit. Eleitor', 'Pai', 'P.Disponíveis', 'P. Acumulados',
+                      'P. Resgatados', 'Mãe', 'Censura de Horário', 'CPF']
+
 dfExportar = dfExportar[dfExportar.Username.notnull()]
+dfExportar = dfExportar[dfExportar.Username.str.match('Username', na=False)==False]
+
 dfExportar = dfExportar.replace("'","",regex=True)
 
 new = dfExportar.Nome.str.split(" ", n=1, expand=True)
@@ -68,7 +77,7 @@ dfExportar['Cred.Tempo'].fillna(0, inplace=True)
 dfExportar['Cred.Valor'].fillna(0, inplace=True)
 dfExportar['Débito'].fillna(0, inplace=True)
 
-dfExportar['Valor'] = round(((dfExportar['Cred.Tempo']/60) * hora) +
+dfExportar['Valor'] = round((dfExportar['Cred.Tempo'].apply(timeToInt) * hora) +
                             dfExportar['Cred.Valor'] - dfExportar['Débito'], 2)
 
 dfExportar['Valor'].fillna(0, inplace=True)
