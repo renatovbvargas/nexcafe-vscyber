@@ -9,7 +9,11 @@ Converte BD Nexcafe para o VSCyber
 ## Passo a passo:
 1. Clone ou download [nexcafe-vscyber](https://github.com/renatovbvargas/nexcafe-vscyber)
 2. Exportar os dados do Nexcafe com nome Exportar.xls ([Ver roteiro aqui!](http://www.vscyber.com/wiki/index.php/NexCafe))
-3. Executar o script conforme exemplo abaixo de hora a 2,50 reais:
+3. Instalar os pacotes necessários
+```
+pip install -r requirements.txt
+```
+4. Executar o script conforme exemplo abaixo de hora a 2,50 reais:
 ```
 python nexcafe-vscyber.py 2.5
 ```
